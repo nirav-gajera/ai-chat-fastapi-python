@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Chat — Gemini</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236c63ff'/%3E%3Cstop offset='100%25' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 6Q16 16 26 16Q16 16 16 26Q16 16 6 16Q16 16 16 6Z' fill='%23ffffff'/%3E%3C/svg%3E"/>
+</head>
+
+<body>
+
+  <!-- CONFIRM MODAL -->
+  <div class="modal-overlay" id="confirm-modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-icon" id="m-icon">⚠️</div>
+      <h3 id="m-title">Are you sure?</h3>
+      <p id="m-text">This action cannot be undone.</p>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-danger" onclick="confirmModal()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" style="display:none">
+    <div class="auth-card">
+      <div class="auth-top">
+        <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <span id="theme-icon-auth">🌙</span>
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-logo">
+        <div class="icon">✦</div>
+        <h1>AI Chat</h1>
+        <p>Powered by <span id="auth-model-name">Gemini 2.5 Flash</span></p>
+      </div>
+      <div class="tab-row">
+        <button class="tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="tab" id="tab-register" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <div id="form-login">
+        <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"
+            onkeydown="if(event.key==='Enter')doLogin()" /></div>
+        <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')doLogin()" /></div>
+        <button class="btn-primary" id="btn-login" onclick="doLogin()">Sign In</button>
+      </div>
+
+      <div id="form-register" style="display:none">
+        <div class="field"><label>Name</label><input type="text" id="reg-name" placeholder="Your name" /></div>
+        <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" /></div>
+        <div class="field"><label>Password</label><input type="password" id="reg-pass" placeholder="Min 6 characters" />
+        </div>
+        <button class="btn-primary" id="btn-register" onclick="doRegister()">Create Account</button>
+      </div>
+
+      <div class="auth-err" id="auth-err"></div>
+    </div>
+  </div>
+
+  <!-- APP SCREEN -->
+  <div id="app-screen">
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">✦</div>
+        <span class="sidebar-title">AI Chat</span>
+        <button class="btn-new" onclick="newChat()">+ New</button>
+      </div>
+      <div id="conv-list"></div>
+      <div class="sidebar-footer">
+        <div class="theme-row">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+          <span class="theme-label">Dark mode</span>
+          <div class="toggle-track" onclick="toggleTheme()" title="Toggle theme">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+        <div class="user-row">
+          <div class="user-row-left" onclick="openProfile()">
+            <div class="user-avatar" id="user-initial">?</div>
+            <div class="user-info">
+              <div class="user-name" id="user-name-display">—</div>
+              <div class="user-email" id="user-email-display">—</div>
+            </div>
+          </div>
+          <button class="btn-logout" title="Sign out" onclick="logout()">➜]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div id="chat-area">
+      <div id="chat-header">
+        <button class="hamburger" onclick="openSidebar()">☰</button>
+        <span id="chat-title">New Chat</span>
+        <div class="status-pill">
+          <div class="status-dot"></div>
+          <span id="chat-model-name">Gemini 2.5 Flash</span>
+        </div>
+      </div>
+
+      <div id="messages">
+        <div class="welcome" id="welcome">
+          <div class="wi">🤖</div>
+          <h2>What can I help with?</h2>
+          <p>Ask me anything — code, concepts, LangChain, RAG, or just chat.</p>
+          <div class="chips">
+            <button class="chip" onclick="useChip(this)">What is LangChain?</button>
+            <button class="chip" onclick="useChip(this)">Explain RAG simply</button>
+            <button class="chip" onclick="useChip(this)">What is LangGraph?</button>
+            <button class="chip" onclick="useChip(this)">PyTorch vs TensorFlow</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="input-area">
+        <div class="input-wrap">
+          <textarea id="msg-input" rows="1" placeholder="Ask anything…"></textarea>
+          <button id="send-btn" onclick="sendMessage()">
+            <svg width="15" height="15" viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          </button>
+        </div>
+        <p class="hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</p>
+      </div>
+    </div>
+
+    <!-- Profile Area -->
+    <div id="profile-area" style="display:none">
+      <div id="profile-header">
+        <button class="hamburger" onclick="openSidebar()">☰</button>
+        <span class="profile-header-title">My Profile</span>
+        <button class="btn-back-chat" onclick="closeProfile()">Back to Chat</button>
+      </div>
+
+      <div class="profile-content">
+        <!-- Account Details Form -->
+        <div class="profile-card">
+          <h2>Account Details</h2>
+          <p class="card-desc">Update your personal information and email address.</p>
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="profile-name" placeholder="Your Name" />
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="profile-email" placeholder="you@example.com" />
+          </div>
+          <div class="profile-err" id="profile-details-err">
+            <span class="notice-text"></span>
+            <button class="btn-close-notice" onclick="this.parentNode.style.display='none'">×</button>
+          </div>
+          <div class="profile-success" id="profile-details-success">
+            <span class="notice-text"></span>
+            <button class="btn-close-notice" onclick="this.parentNode.style.display='none'">×</button>
+          </div>
+          <button class="btn-primary" id="btn-save-details" onclick="saveProfileDetails()"
+            style="margin-top: 10px;">Save Changes</button>
+        </div>
+
+        <!-- Change Password Form -->
+        <div class="profile-card">
+          <h2>Change Password</h2>
+          <p class="card-desc">Keep your account secure by updating your password regularly.</p>
+          <div class="field">
+            <label>Current Password</label>
+            <input type="password" id="profile-current-pass" placeholder="••••••••" />
+          </div>
+          <div class="field">
+            <label>New Password</label>
+            <input type="password" id="profile-new-pass" placeholder="Min 6 characters" />
+          </div>
+          <div class="field">
+            <label>Confirm New Password</label>
+            <input type="password" id="profile-confirm-pass" placeholder="Confirm new password" />
+          </div>
+          <div class="profile-err" id="profile-password-err">
+            <span class="notice-text"></span>
+            <button class="btn-close-notice" onclick="this.parentNode.style.display='none'">×</button>
+          </div>
+          <div class="profile-success" id="profile-password-success">
+            <span class="notice-text"></span>
+            <button class="btn-close-notice" onclick="this.parentNode.style.display='none'">×</button>
+          </div>
+          <button class="btn-primary" id="btn-save-password" onclick="saveProfilePassword()"
+            style="margin-top: 10px;">Update Password</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/static/profile.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
