@@ -77,7 +77,7 @@ Install dependencies and run the server instantly using `uv`:
 uv run uvicorn app:app --reload
 ```
 Once uvicorn is running, open the application in your browser:
-🔗 **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+🔗 **http://127.0.0.1:8000**
 
 ---
 
