@@ -1,6 +1,6 @@
 # AI Chat — Full-Stack FastAPI, MySQL & Gemini Application
 
-A professional, state-of-the-art AI Chat client powered by **FastAPI**, **MySQL**, and the **Gemini 2.5 Flash API**. This project delivers a premium Single Page Application (SPA) experience with custom styling, robust authentication, persistent conversation history, and real-time response streaming.
+A professional, state-of-the-art AI Chat  powered by **FastAPI**, **MySQL**, and the **Gemini 2.5 Flash API**. This project delivers a premium Single Page Application (SPA) experience with custom styling, robust authentication, persistent conversation history, and real-time response streaming.
 
 ---
 
