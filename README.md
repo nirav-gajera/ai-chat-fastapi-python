@@ -89,4 +89,3 @@ Once uvicorn is running, open the application in your browser:
 *   **Bcrypt** - Industry standard password hashing.
 *   **Google GenAI Client** - Integration with Gemini 2.5 Flash.
 *   **Vanilla JS, CSS & HTML5** - Responsive frontend SPA.
-
