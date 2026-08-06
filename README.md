@@ -1,8 +1,10 @@
 # AI Chat — FastAPI + Gemini + MySQL
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.116+-009688)
-![MySQL](https://img.shields.io/badge/MySQL-8.x-orange)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.116+-009688?logo=fastapi&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?logo=mysql&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-D71F00?logo=sqlalchemy&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google-Gemini%202.5%20Flash-4285F4?logo=google&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 A modern AI chat application built with **FastAPI**, **Google Gemini**, **MySQL**, and **Vanilla JavaScript**. It features JWT authentication, persistent conversations, streaming AI responses, and a responsive single-page interface.
@@ -50,6 +52,25 @@ ai-chat-fastapi-python/
 
 ---
 
+
+
+# 🏗 Architecture
+
+```mermaid
+flowchart LR
+
+A[Browser SPA] --> B[FastAPI]
+
+B --> C[JWT Authentication]
+
+B --> D[Chat Service]
+
+D --> E[Google Gemini API]
+
+B --> F[(MySQL Database)]
+```
+
+---
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
@@ -94,3 +115,47 @@ Once uvicorn is running, open the application in your browser:
 *   **Bcrypt** - Industry standard password hashing.
 *   **Google GenAI Client** - Integration with Gemini 2.5 Flash.
 *   **Vanilla JS, CSS & HTML5** - Responsive frontend SPA.
+
+
+---
+
+# ⚡ Streaming Responses
+
+The application streams AI responses using FastAPI's `StreamingResponse`, allowing users to see generated text as it is produced instead of waiting for the complete response.
+
+Benefits include:
+
+- Lower perceived latency
+- Better user experience
+- ChatGPT-like streaming interface
+- Efficient response delivery
+
+
+---
+
+# 🎯 Highlights
+
+- Modern FastAPI backend
+- Gemini 2.5 Flash integration
+- Responsive Single Page Application
+- Persistent chat history
+- JWT authentication
+- MySQL database
+- SQLAlchemy ORM
+- Streaming AI responses
+- Stateful conversation memory
+- Mobile-friendly UI
+- Dark and Light themes
+- Hash-based routing
+- Client & server-side validation
+- Automatic schema creation
+
+
+---
+
+# 📜 License
+
+This project is licensed under the **MIT License**.
+
+Feel free to use, modify, and distribute this project in accordance with the license.
+
