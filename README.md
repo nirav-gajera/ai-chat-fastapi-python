@@ -153,9 +153,5 @@ Benefits include:
 
 ---
 
-# 📜 License
-
-This project is licensed under the **MIT License**.
-
 Feel free to use, modify, and distribute this project in accordance with the license.
 
