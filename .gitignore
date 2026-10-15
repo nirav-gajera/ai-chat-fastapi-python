@@ -8,4 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+# Project-local uv cache (keeps uv independent of a broken user-level cache)
+.uv-cache/
 .env
