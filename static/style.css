@@ -379,6 +379,7 @@ body {
   border-radius: 8px;
   flex-shrink: 0;
   background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -436,7 +437,7 @@ body {
 }
 
 .conv-item:hover {
-  background: var(--surface2)
+  background: var(--surface3)
 }
 
 .conv-item.active {
@@ -767,7 +768,8 @@ body {
 }
 
 .avatar.bot {
-  background: linear-gradient(135deg, var(--accent), var(--accent2))
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:white;
 }
 
 .avatar.user {
@@ -911,7 +913,7 @@ body {
   margin: 0 auto;
   display: flex;
   gap: 9px;
-  align-items: flex-end;
+  align-items: center;
   background: var(--surface2);
   border: 1.5px solid var(--border);
   border-radius: var(--r);
@@ -1083,7 +1085,7 @@ body {
   gap: 24px;
   width: 100%;
   margin: 0 auto;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .profile-card {

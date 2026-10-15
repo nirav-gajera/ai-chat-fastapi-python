@@ -1,0 +1,7 @@
+# Ignore your readable, unminified source files so they don't bloat the stats
+static/app.js linguist-generated
+static/style.css linguist-generated
+
+# Force GitHub to count the small, minified file sizes instead
+static/app.min.js linguist-generated=false linguist-vendored=false
+static/style.min.css linguist-generated=false linguist-vendored=false
