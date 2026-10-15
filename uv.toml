@@ -1,0 +1,3 @@
+# Keep uv's cache inside the project. This avoids failures when the global
+# cache under %LOCALAPPDATA%\uv is inaccessible or has stale entries.
+cache-dir = ".uv-cache"
