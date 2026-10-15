@@ -341,8 +341,24 @@ async function sendMessage() {
   try {
     const res = await authFetch('/chat', 'POST', { message: text, conversation_id: activeConvId });
     removeTyping();
-    if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Server error'); }
-    const data = await res.json();
+    if (!res.ok) {
+      const body = await res.text();
+      let message = 'Server error';
+      try {
+        const data = JSON.parse(body);
+        message = data.detail || message;
+      } catch {
+        if (body.trim()) message = body.trim();
+      }
+      throw new Error(message);
+    }
+    const body = await res.text();
+    let data;
+    try {
+      data = JSON.parse(body);
+    } catch {
+      throw new Error(body.trim() || 'The server returned an invalid response.');
+    }
     addMessage('bot', data.reply);
     if (data.conversation_id !== activeConvId) {
       activeConvId = data.conversation_id;
