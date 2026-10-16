@@ -100,7 +100,7 @@ SECRET_KEY="generate-a-secure-secret-key"
 ### 4. Running the Application
 Install dependencies and run the server instantly using `uv`:
 ```bash
-uv run uvicorn app:app --reload
+uv run python -m uvicorn app:app --reload
 ```
 Once uvicorn is running, open the application in your browser:
 🔗 **http://127.0.0.1:8000**
