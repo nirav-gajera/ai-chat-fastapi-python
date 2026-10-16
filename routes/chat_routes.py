@@ -167,59 +167,43 @@ def chat(
 
     recent.reverse()
 
-    history = [
-        {
-            "role": m.role,
-            "parts": [{"text": m.content}]
+    history = [{"role": m.role, "parts": [{"text": m.content}]} for m in recent]
+
+    history.append({"role": "user", "parts": [{"text": req.message}]})
+
+    try:
+        model_name = (
+            os.getenv("GEMINI_MODEL")
+            or os.getenv("OPENAI_API_MODEL")
+            or "gemini-2.5-flash"
+        )
+        model_name = model_name.strip("\"'")
+        response = client.models.generate_content_stream(
+            model=model_name,
+            contents=history,
+        )
+        full_reply = (
+            "".join(chunk.text for chunk in response if chunk.text) or "No response."
+        )
+
+        db.add(
+            models.Message(conversation_id=conv.id, role="user", content=req.message)
+        )
+        db.add(
+            models.Message(conversation_id=conv.id, role="model", content=full_reply)
+        )
+        db.commit()
+
+        return {
+            "reply": full_reply,
+            "conversation_id": conv.id,
         }
-        for m in recent
-    ]
-
-    history.append({
-        "role": "user",
-        "parts": [{"text": req.message}]
-    })
-
-    def generate():
-
-        full_reply = ""
-
-        try:
-            model_name = os.getenv("GEMINI_MODEL") or os.getenv("OPENAI_API_MODEL") or "gemini-2.5-flash"
-            model_name = model_name.strip('"\'')
-            response = client.models.generate_content_stream(
-                model=model_name,
-                contents=history,
-            )
-
-            for chunk in response:
-
-                if chunk.text:
-                    full_reply += chunk.text
-                    yield chunk.text
-
-            # Save messages AFTER stream finishes
-            db.add(models.Message(
-                conversation_id=conv.id,
-                role="user",
-                content=req.message
-            ))
-
-            db.add(models.Message(
-                conversation_id=conv.id,
-                role="model",
-                content=full_reply
-            ))
-
-            db.commit()
-
-        except Exception as e:
-            yield f"\n[ERROR]: {str(e)}"
-
-    return StreamingResponse(
-        generate(),
-        media_type="text/plain"
-    )
+    except Exception as e:
+        db.rollback()
+        print("Gemini Error:", e)
+        raise HTTPException(
+            status_code=502, detail=f"AI service error: {str(e)}"
+        ) from e
 
 
 @router.delete("/conversations/{conv_id}")
